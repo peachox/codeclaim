@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bonus Code Form</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      zoom: 2;
+    }
+    #submitted {
+      margin-top: 20px;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+    #submitted .title {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Enter Bonus Code</h1>
+  <input id="textInput" type="text" placeholder="Enter code..." />
+  <button id="sendBtn">Submit</button>
+
+  <h2>Submitted JSON Preview</h2>
+  <div id="submitted"></div>
+
+  <script>
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const code = document.getElementById('textInput').value.trim();
+      if (!code) return;
+
+      const query = `
+query BonusCodeInformation($code: String!, $couponType: CouponType!) {
+  bonusCodeInformation(code: $code, couponType: $couponType) {
+    availabilityStatus
+    bonusValue
+  }
+}
+`.trim();
+
+      const variables = {
+        code: code,
+        couponType: "drop"
+      };
+
+      const previewEl = document.getElementById('submitted');
+      previewEl.innerHTML = `
+<div class="title">query:</div>
+<pre>${query}</pre>
+<div class="title">variables:</div>
+<pre>${JSON.stringify(variables, null, 2)}</pre>
+      `.trim();
+    });
+  </script>
+</body>
+</html>
